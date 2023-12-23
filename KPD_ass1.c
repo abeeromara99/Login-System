@@ -33,16 +33,19 @@ int main ()
 	u8 Local_u8Counter=0;
 	u8 Local_u8NumOfAttempts=0;
 	u8 Local_u8NumOfMaxAttempts=3;
+	u8 Local_u8Flag;
 
 	u8 Local_u8Key;
 
 	DIO_voidInit();
 	LCD_voidInt();
 
-	LCD_u8GoToXY(1,0);
-	LCD_voidWriteString("Enter password");
+	//LCD_u8GoToXY(1,0);
+	//LCD_voidWriteString("Enter password");
 	while (Local_u8NumOfAttempts !=Local_u8NumOfMaxAttempts)
 	{
+		LCD_u8GoToXY(1,0);
+		LCD_voidWriteString("Enter password");
 		while (Local_u8Counter != 4)
 		{
 			KPD_u8GetKeyState(&Local_u8Key);
@@ -50,6 +53,7 @@ int main ()
 			//no displaying on LCD
 			if (Local_u8Key != KPD_u8_KEY_NOT_PRESSED)
 			{
+
 				LCD_u8GoToXY(2,Local_u8Counter);
 				LCD_voidSendData(Local_u8Key);
 				_delay_ms(200);
@@ -60,6 +64,55 @@ int main ()
 			}
 		}
 
+		if ((Input_password[0]==Correct_password[0]) && (Input_password[1]==Correct_password[1]) && (Input_password[2]==Correct_password[2])  &&(Input_password[3]==Correct_password[3]))
+		{
+			Local_u8Flag=1;
+		}
+		else
+		{
+			Local_u8Flag=0;
+		}
+		if (Local_u8Flag ==1)
+		{
+			LCD_voidClearDisplay();
+			LCD_u8GoToXY(1,0);
+			LCD_voidWriteString("correct         password");
+			Green_led();
+			break;
+		}
+		else if (Local_u8Flag==0)
+		{
+			LCD_voidClearDisplay();
+			LCD_u8GoToXY(1,0);
+			LCD_voidWriteString("incorrect       password");
+			_delay_ms(500);
+			LCD_voidClearDisplay();
+			//LCD_u8GoToXY(1,0);
+			//LCD_voidWriteString("try again");
+			//_delay_ms(1000);
+			Local_u8Counter=0;
+			Local_u8NumOfAttempts++;
+			if (Local_u8NumOfAttempts ==Local_u8NumOfMaxAttempts)
+			{
+				Red_led();
+				LCD_voidClearDisplay();
+				LCD_u8GoToXY(1,0);
+				LCD_voidWriteString("you tried 3     times");
+				_delay_ms(1000);
+				LCD_voidClearDisplay();
+				LCD_u8GoToXY(1,0);
+				LCD_voidWriteString("wait for 5 sec  and try later");
+				_delay_ms(5000);
+				Turn_Off_LED();
+				LCD_voidClearDisplay();
+				//LCD_u8GoToXY(1,0);
+				//LCD_voidWriteString("Enter password");
+				Local_u8NumOfAttempts=0;
+			}
+		}
+
+
+		/*
 		if ((Input_password[0]==Correct_password[0]) && (Input_password[1]==Correct_password[1]) && (Input_password[2]==Correct_password[2])  &&(Input_password[3]==Correct_password[3]))
 		{
 			LCD_voidClearDisplay();
@@ -75,29 +128,30 @@ int main ()
 			LCD_voidWriteString("incorrect       password");
 			_delay_ms(500);
 			LCD_voidClearDisplay();
-			LCD_u8GoToXY(1,0);
-			LCD_voidWriteString("try again");
+			//LCD_u8GoToXY(1,0);
+			//LCD_voidWriteString("try again");
+			//_delay_ms(1000);
 			Local_u8Counter=0;
 			Local_u8NumOfAttempts++;
 		}
 		if (Local_u8NumOfAttempts ==Local_u8NumOfMaxAttempts)
 		{
+			Red_led();
 			LCD_voidClearDisplay();
 			LCD_u8GoToXY(1,0);
 			LCD_voidWriteString("you tried 3     times");
-			_delay_ms(500);
+			_delay_ms(1000);
 			LCD_voidClearDisplay();
 			LCD_u8GoToXY(1,0);
 			LCD_voidWriteString("wait for 5 sec  and try later");
-			Red_led();
 			_delay_ms(5000);
 			Turn_Off_LED();
 			LCD_voidClearDisplay();
-			LCD_u8GoToXY(1,0);
-			LCD_voidWriteString("Enter password");
+			//LCD_u8GoToXY(1,0);
+			//LCD_voidWriteString("Enter password");
 			Local_u8NumOfAttempts=0;
-
 		}
+		 */
 	}
 
 	return 0;
